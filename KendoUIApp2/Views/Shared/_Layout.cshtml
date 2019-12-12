@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>VisaPassport - @ViewBag.Title</title>
+    <link rel="icon" type="image/png" href="~/pngs/mktu_logo.png" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2018.2.516/kendo.common-bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2018.2.516/kendo.mobile.all.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2018.2.516/kendo.bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/kendo/2018.2.516/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2018.2.516/angular.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2018.2.516/jszip.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2018.2.516/kendo.all.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2018.2.516/kendo.aspnetmvc.min.js")"></script>
+</head>
+<body>
+    <header>
+        <div class="align-content-md-start col-md-12">
+         
+            <div class="float-left">
+                <nav>
+                    <ul id="menu">
+                        <li>@Html.ActionLink("Home", "Tasks", "Home")</li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+    </header>
+    <div id="body">
+        @RenderSection("featured", required: false)
+        <section class="content-wrapper main-content clear-fix">
+            @RenderBody()
+        </section>
+    </div>
+
+    <footer>
+        <div class="content-wrapper">
+            <div class="float-left">
+                <p>Copyright &copy; @DateTime.Now.Year Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

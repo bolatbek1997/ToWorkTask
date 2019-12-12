@@ -1,0 +1,125 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@*<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>*@
+@section featured {
+    <div class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title.</h1>
+                <h2>@ViewBag.Message</h2>
+            </hgroup>
+            <p>
+                To learn more about ASP.NET MVC visit
+                <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
+                The page features <mark>videos, tutorials, and samples</mark> to help you get the most from ASP.NET MVC.
+                If you have any questions about ASP.NET MVC visit
+                <a href="http://forums.asp.net/1146.aspx/1?MVC" title="ASP.NET MVC Forum">our forums</a>.
+            </p>
+        </div>
+    </div>
+}
+
+<div id="example">
+    <div class="demo-section k-content custom-width">
+        @model ItemsModel
+        @(Html.Kendo().Grid<KendoUIApp2.Models.ModelHuman>()
+                                            .Name("grid")
+                                            .Events(events => events.Change("Grid_OnRowSelect"))
+                                            .Columns(columns =>
+                                            {
+                                                columns.Bound(p => p.id).Visible(false);
+                                                columns.Bound(p => p.FIO)
+                                                    .Filterable(ftb =>
+                                                        ftb.Cell(cell =>
+                                                            cell.Operator("contains")
+                                                            .SuggestionOperator(FilterType.Contains))
+                                                    );
+
+                                                columns.Bound(p => p.FIOpasport);
+                                                columns.Bound(p => p.nationality);
+
+                                                columns.Bound(p => p.birthDate).Format("{0:dd.MM.yyyy}");
+                                                columns.Bound(p => p.countDayPasportEnd);
+                                                columns.Bound(p => p.pasportEndOfDate).Format("{0:dd.MM.yyyy}"); ;
+                                                columns.Bound(p => p.countDayVisaEnd);
+                                                columns.Bound(p => p.visaEndOfDate).Format("{0:dd.MM.yyyy}"); ;
+                                                columns.Bound(p => p.merried).ClientTemplate("#if(merried==2){#" + "<span>Бойдак</span>" + "#}else{#" + "<span>Отбасылы</span>" + "#}#");
+                                                columns.Bound(p => p.pol);
+                                            //columns.Bound(p => p.);
+                                            //columns.Bound(p => p.FIOpasport);
+                                            //columns.Bound(p => p.OrderID).Filterable(false);
+                                            //columns.Bound(p => p.Freight);
+                                            //columns.Bound(p => p.OrderDate).Format("{0:MM/dd/yyyy}");
+                                            //columns.Bound(p => p.ShipName);
+                                            //columns.Bound(p => p.ShipCity);
+                                        })
+                                            .ClientRowTemplate("")
+                                            .Groupable()
+                                            .AutoBind(true)
+                                            .Pageable()
+                                            .Sortable()
+                                            .Scrollable()
+                                            .Filterable()
+                                            .Resizable(resize => resize.Columns(true))
+                                            .Selectable(selectTable => selectTable.Mode(GridSelectionMode.Single))
+                                            //.Excel()
+
+                                            //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+                                            .HtmlAttributes(new { style = "height:550px;" })
+
+                                            .DataSource(dataSource => dataSource
+                                                .Ajax()
+                                                .PageSize(20)
+                                                .Read(read => read.Action("Remote_Binding_Orders_Read", "Home"))
+                                             )
+        )
+
+    </div>
+</div>
+<div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Инфо </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="info"></div>
+        </div>
+    </div>
+</div>
+@(Html.Kendo().Window()
+                .Modal(true)
+                .Name("AddDatabaseModal")
+                .Title("Add Database")
+                .Visible(false)
+                .Width(400)
+)
+<script>
+    Grid_OnRowSelect = function (e) {
+        var data = this.dataItem(this.select());
+        console.log(data);
+        YourRowID = data.id;//IMP
+        console.log(YourRowID);
+             $.ajax({
+                url: '@Url.Action("StudentInfo", "Home")',
+
+                 data: { id: YourRowID },
+                 success: function (inData) {
+                     //console.log(inData);
+                     //var grid = $('#AssociateSearch').getKendoGrid();
+                     //grid.dataSource.data(inData);
+                     //grid.refresh();
+                    console.log(inData);
+                    $('#info').html(inData);
+                     $('#basicModal').modal('show');
+                   //  var window = $("#AddDatabaseModal").html(inData).center().open();
+                }
+            });
+
+    }
+</script>

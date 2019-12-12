@@ -1,0 +1,86 @@
+﻿@section featured {
+
+    <div class="justify-content-around">
+        <div style="padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    background-color: #7ac0da;
+    border-radius: 0.3rem;">
+            <hgroup class="site-title">
+                <span style="color:black">Задачи</span>
+
+
+
+            </hgroup>
+        </div>
+    </div>
+}
+
+<div id="example col-lg-12">
+    <div class="demo-section k-content custom-width col-lg-12">
+
+        @(Html.Kendo().Grid<KendoUIApp2.Models.Tasks>()
+                                                                                                    .Name("grid")
+                                                                                                    //.Events(events => events.Change("Grid_OnRowSelect"))
+                                                                                                    .Columns(columns =>
+                                                                                                    {
+                                                                                                        columns.Bound(p => p.Id).Visible(false);
+                                                                                                        columns.Bound(p => p.Name)
+                                                                                                            .Filterable(ftb =>
+                                                                                                                ftb.Cell(cell =>
+                                                                                                                    cell.Operator("contains")
+                                                                                                                    .SuggestionOperator(FilterType.Contains))
+                                                                                                            ).Title("Имя");
+                                                                                                        columns.Bound(p => p.CreateDate).Format("{0:dd.MM.yyyy}").Title("Дата");
+                                                                                                        columns.Bound(p => p.Completed).ClientTemplate("#if(Completed==true){#" + "<span>Выполнено</span>" + "#}else{#" + "<span>Невыполнено</span>" + "#}#").Title("Выполнено");
+                                                                                                        columns.Command(command => { command.Edit(); command.Destroy(); }).Width(200);
+                                                                                                    })
+                                                                                                    //  .ClientRowTemplate("")
+
+                                                                                                    .Groupable()
+                                                                                                    .AutoBind(true)
+                                                                                                    .Pageable()
+                                                                                                    .Sortable()
+                                                                                                    .Scrollable()
+                                                                                                    .Filterable()
+                                                                                                    .Resizable(resize => resize.Columns(true))
+                                                                                                    .Selectable(selectTable => selectTable.Mode(GridSelectionMode.Single))
+                                                                                                     .ToolBar(toolbar => toolbar.Create())
+                                                                                                    .Editable(editable => editable.Mode(GridEditMode.PopUp))
+                                                                                                    .DataSource(dataSource => dataSource
+                                                                                                             .Ajax()
+                                                                                                             .PageSize(20)
+                                                                                                             .Events(events => events.Error("error_handler"))
+                                                                                                             .Model(model => model.Id(p => p.Id))
+                                                                                                             .Create(update => update.Action("Create", "Home"))
+                                                                                                             .Read(read => read.Action("GridAsync", "Home"))
+                                                                                                             .Update(update => update.Action("Update", "Home"))
+                                                                                                             .Destroy(update => update.Action("Delete", "Home"))
+                                                                                                                                        )
+                //.Events(events => events.DataBound("dataBound"))
+
+
+
+                //.Filterable(ftb => ftb.Mode(GridFilterMode.Row))
+                // .HtmlAttributes(new { style = "height:850px;" })
+
+
+        )
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>
